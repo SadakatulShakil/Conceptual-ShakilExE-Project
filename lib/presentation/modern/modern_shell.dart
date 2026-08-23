@@ -23,18 +23,8 @@ class ModernShell extends StatelessWidget {
   static const _mobileWallpaper = 'assets/images/modern_bg_mobile.jpg';
   static const _desktopWallpaper = 'assets/images/modern_bg_desktop.jpg';
 
-  // Sizing the phone mockup on wide viewports. The launcher's content is a
-  // compact, glanceable dashboard rather than a full-height scrolling app,
-  // so deriving the frame's height from a real phone's aspect ratio (or
-  // from the browser window's height) leaves a large dead gap between the
-  // content and the pinned dock. Instead, height comes from how tall the
-  // content + dock actually are at the chosen width, so the mockup fits
-  // itself — not the other way around.
   static const double _frameMaxWidth = 460;
-  // Design-space height (at a 375-wide screen) needed for the status bar,
-  // all four bands, the identity card, and the dock with comfortable
-  // breathing room — measured from the actual widget sizes, not guessed.
-  // Retune this if the content in ModernHome/ModernDock changes materially.
+
   static const double _designContentHeight = 620;
   static const double _frameBezel = 12;
 
@@ -73,10 +63,7 @@ class ModernShell extends StatelessWidget {
     );
 
     if (isWide) {
-      // Pick the width first, then derive height from what the content
-      // actually needs at that width — not a fixed aspect ratio. If that
-      // would overflow the window, shrink both dimensions together so the
-      // phone stays correctly proportioned.
+
       var frameWidth = _frameMaxWidth;
       var frameHeight =
           _designContentHeight * (frameWidth / 375) + _frameBezel * 2;
@@ -91,10 +78,8 @@ class ModernShell extends StatelessWidget {
       final screenWidth = frameWidth - _frameBezel * 2;
       final screenHeight = frameHeight - _frameBezel * 2;
 
-      // Re-point ScreenUtil's `.w/.h/.sp` scale at the frame's screen
-      // cutout (not the full browser window), so tiles are sized for that
-      // cutout instead of overflowing it.
       ScreenUtil.configure(
+        designSize: const Size(375, 812),
         data: mediaQuery.copyWith(size: Size(screenWidth, screenHeight)),
       );
 
@@ -108,9 +93,7 @@ class ModernShell extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Center(
-              // Vertical centering only — the phone hugs the far left and
-              // the panel fills the rest of the width, rather than the
-              // whole group floating in the middle of the window.
+
               child: SizedBox(
                 height: frameHeight,
                 child: Row(
@@ -136,9 +119,7 @@ class ModernShell extends StatelessWidget {
       );
     }
 
-    // flutter_screenutil's `.w/.h/.sp` scale off the physical window size —
-    // on a real phone that IS the window, so no re-pointing is needed here.
-    ScreenUtil.configure(data: mediaQuery);
+    ScreenUtil.configure(designSize: const Size(300, 784), data: mediaQuery);
 
     return Stack(
       fit: StackFit.expand,
