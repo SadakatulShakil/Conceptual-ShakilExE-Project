@@ -24,7 +24,7 @@ class NowBuildingWidget extends StatelessWidget {
           Get.to(() => SectionPlaceholderScreen(title: nowSection.title)),
       behavior: HitTestBehavior.opaque,
       child: Container(
-        padding: EdgeInsets.all(18.w),
+        padding: EdgeInsets.all(14.w),
         decoration: BoxDecoration(
           color: AppColors.tile,
           borderRadius: BorderRadius.circular(18.r),
@@ -88,7 +88,7 @@ class NowBuildingWidget extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 18.h),
+            SizedBox(height: 14.h),
             Stack(
               children: [
                 Container(
@@ -110,7 +110,7 @@ class NowBuildingWidget extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 14.h),
+            SizedBox(height: 10.h),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -118,10 +118,7 @@ class NowBuildingWidget extends StatelessWidget {
                 Icon(Icons.skip_previous, size: 18.sp, color: AppColors.textMuted),
                 Icon(Icons.play_arrow, size: 18.sp, color: AppColors.accentSoft),
                 Icon(Icons.skip_next, size: 18.sp, color: AppColors.textMuted),
-                Icon(
-                  Icons.rocket_launch,
-                  size: 16.sp,
-                  color: AppColors.textMuted,
+                Icon(Icons.rocket_launch, size: 16.sp, color: AppColors.textMuted,
                 ),
               ],
             ),

@@ -28,7 +28,7 @@ class CommitHeatmapWidget extends StatelessWidget {
       onTap: () => launchExternal(github?.url ?? ''),
       behavior: HitTestBehavior.opaque,
       child: Container(
-        padding: EdgeInsets.all(18.w),
+        padding: EdgeInsets.all(14.w),
         decoration: BoxDecoration(
           color: AppColors.tile,
           borderRadius: BorderRadius.circular(18.r),
@@ -50,7 +50,7 @@ class CommitHeatmapWidget extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 14.h),
+            SizedBox(height: 10.h),
             for (var row = 0; row < 3; row++) ...[
               if (row > 0) SizedBox(height: 4.w),
               Row(
@@ -74,7 +74,7 @@ class CommitHeatmapWidget extends StatelessWidget {
                 ],
               ),
             ],
-            SizedBox(height: 14.h),
+            SizedBox(height: 10.h),
             Text(
               '318 commits this year',
               style: AppTheme.sans(size: 9.sp, color: AppColors.textMuted),

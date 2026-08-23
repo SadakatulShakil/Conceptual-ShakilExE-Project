@@ -1,5 +1,3 @@
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../core/theme/app_colors.dart';
@@ -25,21 +23,20 @@ class ModernShell extends StatelessWidget {
   static const _mobileWallpaper = 'assets/images/modern_bg_mobile.jpg';
   static const _desktopWallpaper = 'assets/images/modern_bg_desktop.jpg';
 
-  // Design proportions of the phone mockup on wide viewports. Height is
-  // capped well below "fill the whole window" — the launcher's content is
-  // deliberately compact (a single glanceable grid, not a full scrolling
-  // feed), so a mockup that always stretches to the window's height leaves
-  // a large empty gap above the dock. A moderately-sized, correctly
-  // proportioned phone reads better than an oversized one with dead space.
-  static const double _frameAspect = 375 / 812;
-  static const double _frameMaxWidth = 420;
-  static const double _frameMaxHeight = 760;
+  // Sizing the phone mockup on wide viewports. The launcher's content is a
+  // compact, glanceable dashboard rather than a full-height scrolling app,
+  // so deriving the frame's height from a real phone's aspect ratio (or
+  // from the browser window's height) leaves a large dead gap between the
+  // content and the pinned dock. Instead, height comes from how tall the
+  // content + dock actually are at the chosen width, so the mockup fits
+  // itself — not the other way around.
+  static const double _frameMaxWidth = 460;
+  // Design-space height (at a 375-wide screen) needed for the status bar,
+  // all four bands, the identity card, and the dock with comfortable
+  // breathing room — measured from the actual widget sizes, not guessed.
+  // Retune this if the content in ModernHome/ModernDock changes materially.
+  static const double _designContentHeight = 620;
   static const double _frameBezel = 12;
-
-  // Companion content panel shown beside the mockup on very wide viewports.
-  static const double _panelGap = 40;
-  static const double _panelMaxWidth = 440;
-  static const double _panelMinWidth = 260;
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +48,11 @@ class ModernShell extends StatelessWidget {
         children: [
           Positioned.fill(
             child: SingleChildScrollView(
-              padding: EdgeInsets.only(bottom: 96.h),
+              // Reserve room for the pinned dock below (~52.w button height +
+              // 32.h vertical padding) plus its 10.h bottom margin plus the
+              // bottom safe-area inset, with headroom so the last content
+              // card (IdentityCard) never sits under it.
+              padding: EdgeInsets.only(bottom: 148.h),
               child: const SafeArea(bottom: false, child: ModernHome()),
             ),
           ),
@@ -62,7 +63,7 @@ class ModernShell extends StatelessWidget {
             child: SafeArea(
               top: false,
               child: Padding(
-                padding: EdgeInsets.fromLTRB(16.w, 0, 16.w, 10.h),
+                padding: EdgeInsets.fromLTRB(10.w, 0, 10.w, 10.h),
                 child: const ModernDock(),
               ),
             ),
@@ -72,15 +73,19 @@ class ModernShell extends StatelessWidget {
     );
 
     if (isWide) {
-      // Size the mockup by available height first (capped so it never
-      // looks oversized on huge monitors), then derive width from the
-      // frame's design aspect ratio.
+      // Pick the width first, then derive height from what the content
+      // actually needs at that width — not a fixed aspect ratio. If that
+      // would overflow the window, shrink both dimensions together so the
+      // phone stays correctly proportioned.
+      var frameWidth = _frameMaxWidth;
       var frameHeight =
-          math.min(mediaQuery.size.height * 0.92, _frameMaxHeight);
-      var frameWidth = frameHeight * _frameAspect;
-      if (frameWidth > _frameMaxWidth) {
-        frameWidth = _frameMaxWidth;
-        frameHeight = frameWidth / _frameAspect;
+          _designContentHeight * (frameWidth / 375) + _frameBezel * 2;
+
+      final maxAvailableHeight = mediaQuery.size.height * 0.92;
+      if (frameHeight > maxAvailableHeight) {
+        final shrink = maxAvailableHeight / frameHeight;
+        frameHeight = maxAvailableHeight;
+        frameWidth *= shrink;
       }
 
       final screenWidth = frameWidth - _frameBezel * 2;
@@ -94,34 +99,39 @@ class ModernShell extends StatelessWidget {
       );
 
       final showPanel = mediaQuery.size.width >= _panelBreakpoint;
-      Widget mockupGroup = PhoneFrame(
-        width: frameWidth,
-        height: frameHeight,
-        child: launcher,
-      );
-
-      if (showPanel) {
-        final availableForRow = mediaQuery.size.width * 0.9;
-        final panelWidth = (availableForRow - frameWidth - _panelGap)
-            .clamp(_panelMinWidth, _panelMaxWidth);
-
-        mockupGroup = Row(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            mockupGroup,
-            SizedBox(width: _panelGap),
-            DesktopContentPanel(width: panelWidth, height: frameHeight),
-          ],
-        );
-      }
 
       return Stack(
         fit: StackFit.expand,
         children: [
           Image.asset(_desktopWallpaper, fit: BoxFit.cover),
           ColoredBox(color: AppColors.screenBg.withOpacity(0.72)),
-          Center(child: mockupGroup),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: Center(
+              // Vertical centering only — the phone hugs the far left and
+              // the panel fills the rest of the width, rather than the
+              // whole group floating in the middle of the window.
+              child: SizedBox(
+                height: frameHeight,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    PhoneFrame(
+                      width: frameWidth,
+                      height: frameHeight,
+                      child: launcher,
+                    ),
+                    if (showPanel) ...[
+                      const SizedBox(width: 32),
+                      Expanded(
+                        child: DesktopContentPanel(height: frameHeight),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+            ),
+          ),
         ],
       );
     }

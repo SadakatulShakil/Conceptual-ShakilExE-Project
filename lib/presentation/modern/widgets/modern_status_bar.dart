@@ -18,21 +18,6 @@ class ModernStatusBar extends StatelessWidget {
           '18:10',
           style: AppTheme.sans(size: 12.sp, color: AppColors.textPrimary),
         ),
-        Row(
-          children: [
-            for (var i = 0; i < 3; i++) ...[
-              if (i > 0) SizedBox(width: 4.w),
-              Container(
-                width: 6.w,
-                height: 6.w,
-                decoration: BoxDecoration(
-                  border: Border.all(color: AppColors.textMuted, width: 1),
-                  borderRadius: BorderRadius.circular(1.r),
-                ),
-              ),
-            ],
-          ],
-        ),
       ],
     );
   }

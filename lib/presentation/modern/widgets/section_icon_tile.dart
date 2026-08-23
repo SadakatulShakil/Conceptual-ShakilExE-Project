@@ -33,8 +33,8 @@ class SectionIconTile extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            width: 52.w,
-            height: 52.w,
+            width: 48.w,
+            height: 48.w,
             decoration: BoxDecoration(
               color: selected ? color.withOpacity(0.2) : AppColors.tile,
               borderRadius: BorderRadius.circular(14.r),

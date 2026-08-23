@@ -25,7 +25,7 @@ class TimeFrameControl extends StatelessWidget {
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
+        padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 14.h),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(24.r),
           border: Border.all(color: AppColors.timeWarp, width: 1.5),

@@ -11,30 +11,18 @@ import '../../../domain/entities/skill_group.dart';
 import '../../shared/project_visuals.dart';
 import '../../shared/section_config.dart';
 
-/// Desktop-only companion panel shown beside the [PhoneFrame] mockup: a tab
-/// row over Projects/Experience/Skills/About (Projects selected by default)
-/// with a richer list view of whichever section is active. Selection is
-/// shared with [DesktopSelectionController] so tapping the matching tile
-/// inside the phone mockup switches this panel too. Sizes are plain logical
-/// pixels rather than ScreenUtil's `.w/.h/.sp` — this panel isn't part of
-/// the phone's scaled screen, so it isn't affected by whatever ScreenUtil
-/// is currently re-pointed at.
+/// Desktop-only companion panel shown beside the [PhoneFrame] mockup: a
+/// richer list view of whichever section is active (Projects by default).
+/// Selection is entirely driven by [DesktopSelectionController] — tapping a
+/// section or project tile inside the phone mockup is the only navigation;
+/// this panel has no tabs of its own, just a heading reflecting the current
+/// selection. Sizes are plain logical pixels rather than ScreenUtil's
+/// `.w/.h/.sp` — this panel isn't part of the phone's scaled screen, so it
+/// isn't affected by whatever ScreenUtil is currently re-pointed at.
 class DesktopContentPanel extends StatelessWidget {
-  const DesktopContentPanel({
-    super.key,
-    required this.width,
-    required this.height,
-  });
+  const DesktopContentPanel({super.key, required this.height});
 
-  final double width;
   final double height;
-
-  static const _tabs = [
-    SectionId.projects,
-    SectionId.experience,
-    SectionId.skills,
-    SectionId.about,
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +30,7 @@ class DesktopContentPanel extends StatelessWidget {
     final selection = Get.find<DesktopSelectionController>();
 
     return SizedBox(
-      width: width,
+      width: double.infinity,
       height: height,
       child: Container(
         padding: const EdgeInsets.all(22),
@@ -53,29 +41,20 @@ class DesktopContentPanel extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'CONTENT',
-              style: AppTheme.sans(
-                size: 11,
-                weight: FontWeight.w600,
-                color: AppColors.textMuted,
-              ).copyWith(letterSpacing: 1),
-            ),
-            const SizedBox(height: 14),
-            Obx(
-              () => Row(
+            Obx(() {
+              final section = kSections
+                  .firstWhere((s) => s.id == selection.selected.value);
+              return Row(
                 children: [
-                  for (final id in _tabs) ...[
-                    _TabChip(
-                      id: id,
-                      selected: selection.selected.value == id,
-                      onTap: () => selection.selected.value = id,
-                    ),
-                    const SizedBox(width: 8),
-                  ],
+                  Icon(section.icon, size: 18, color: section.color),
+                  const SizedBox(width: 8),
+                  Text(
+                    section.title,
+                    style: AppTheme.sans(size: 15, weight: FontWeight.w600),
+                  ),
                 ],
-              ),
-            ),
+              );
+            }),
             const SizedBox(height: 18),
             Expanded(
               child: Obx(
@@ -118,60 +97,6 @@ class DesktopContentPanel extends StatelessWidget {
       default:
         return const SizedBox.shrink();
     }
-  }
-}
-
-class _TabChip extends StatelessWidget {
-  const _TabChip({
-    required this.id,
-    required this.selected,
-    required this.onTap,
-  });
-
-  final SectionId id;
-  final bool selected;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final section = kSections.firstWhere((s) => s.id == id);
-    return GestureDetector(
-      onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 150),
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        decoration: BoxDecoration(
-          color: selected
-              ? section.color.withOpacity(0.22)
-              : Colors.white.withOpacity(0.05),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color:
-                selected ? section.color.withOpacity(0.6) : Colors.transparent,
-          ),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              section.icon,
-              size: 14,
-              color: selected ? section.color : AppColors.textMuted,
-            ),
-            const SizedBox(width: 6),
-            Text(
-              section.title,
-              style: AppTheme.sans(
-                size: 11,
-                weight: selected ? FontWeight.w600 : FontWeight.w400,
-                color: selected ? AppColors.textPrimary : AppColors.textMuted,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
   }
 }
 

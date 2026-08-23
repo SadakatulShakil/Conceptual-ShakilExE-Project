@@ -20,10 +20,6 @@ import 'widgets/now_building_widget.dart';
 import 'widgets/section_icon_tile.dart';
 import 'widgets/time_frame_control.dart';
 
-/// The scrollable body of the modern launcher: status bar and feature bands.
-/// The dock is anchored separately by [ModernShell] so it stays pinned to
-/// the bottom of the screen regardless of content height. All content is
-/// read from [PortfolioController] — nothing here duplicates portfolio data.
 class ModernHome extends StatelessWidget {
   const ModernHome({super.key});
 
@@ -31,20 +27,24 @@ class ModernHome extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.find<PortfolioController>();
 
+    final isWide =
+        MediaQuery.sizeOf(context).width >= LayoutBreakpoints.wide;
+    final bandGap = isWide ? 14.h : 10.h;
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          SizedBox(height: 18.h),
+          SizedBox(height: bandGap),
           const ModernStatusBar(),
-          SizedBox(height: 20.h),
+          SizedBox(height: bandGap),
           _BandA(controller: controller),
-          SizedBox(height: 20.h),
+          SizedBox(height: bandGap),
           _BandB(controller: controller),
-          SizedBox(height: 20.h),
+          SizedBox(height: bandGap),
           _BandC(controller: controller),
-          SizedBox(height: 20.h),
+          SizedBox(height: bandGap),
           const IdentityCard(),
         ],
       ),
@@ -52,8 +52,6 @@ class ModernHome extends StatelessWidget {
   }
 }
 
-/// Now Building (left) beside a 2x2 cluster of Projects/Experience/
-/// Skills/About tiles (right).
 class _BandA extends StatelessWidget {
   const _BandA({required this.controller});
 
@@ -64,12 +62,10 @@ class _BandA extends StatelessWidget {
     final desktopSelection = Get.find<DesktopSelectionController>();
     final hasPanel =
         MediaQuery.sizeOf(context).width >= LayoutBreakpoints.desktopPanel;
+    final isWide =
+        MediaQuery.sizeOf(context).width >= LayoutBreakpoints.wide;
+    final bandGap = isWide ? 14.h : 5.h;
 
-    // The observable must be read unconditionally inside the builder — a
-    // short-circuited `hasPanel ? selected.value : null` means Obx sees zero
-    // observables read on narrow viewports, and GetX's own safety check
-    // throws ("the improper use of a GetX has been detected") instead of
-    // silently no-op'ing.
     return Obx(() {
       final selectedValue = desktopSelection.selected.value;
       final selected = hasPanel ? selectedValue : null;
@@ -78,8 +74,8 @@ class _BandA extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Expanded(flex: 2, child: NowBuildingWidget()),
-            SizedBox(width: 11.w),
+            const Expanded(flex: 3, child: NowBuildingWidget()),
+            SizedBox(width: 10.w),
             Expanded(
               flex: 2,
               child: Column(
@@ -105,7 +101,7 @@ class _BandA extends StatelessWidget {
                       ),
                     ],
                   ),
-                  SizedBox(height: 11.w),
+                  SizedBox(height: bandGap),
                   Row(
                     children: [
                       Expanded(
@@ -136,10 +132,6 @@ class _BandA extends StatelessWidget {
     });
   }
 
-  /// On wide viewports with the [DesktopContentPanel] showing, tapping one
-  /// of these tiles switches the panel's content instead of navigating away
-  /// (which would leave the mockup+panel composition). On phones (or a
-  /// narrower desktop window without the panel) it navigates as normal.
   Widget _sectionTile(
     BuildContext context,
     SectionId id,
@@ -164,7 +156,6 @@ class _BandA extends StatelessWidget {
   }
 }
 
-/// GitHub + Résumé quick-launch tiles beside the Time Frame era switcher.
 class _BandB extends StatelessWidget {
   const _BandB({required this.controller});
 
@@ -176,53 +167,49 @@ class _BandB extends StatelessWidget {
         .firstWhereOrNull((l) => l.type == ContactType.github);
     final era = Get.find<EraController>();
 
-    // Obx wraps IntrinsicHeight from the outside — see the comment in
-    // _BandA for why it can't sit nested inside the subtree it measures.
+
     return Obx(
-      () => IntrinsicHeight(
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Expanded(
-              child: SectionIconTile(
-                icon: Icons.code_rounded,
-                color: AppColors.iconWhite,
-                label: 'GitHub',
-                onTap: () => launchExternal(github?.url ?? ''),
-              ),
+      () => Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Expanded(
+            child: SectionIconTile(
+              icon: Icons.code_rounded,
+              color: AppColors.iconWhite,
+              label: 'GitHub',
+              onTap: () => launchExternal(github?.url ?? ''),
             ),
-            SizedBox(width: 11.w),
-            Expanded(
-              child: SectionIconTile(
-                icon: Icons.description_outlined,
-                color: AppColors.iconCoral,
-                label: 'Résumé',
-                onTap: () {
-                  final assetPath = controller.profile.resumeAssetPath;
-                  if (assetPath != null) {
-                    openResumeAsset(assetPath);
-                  } else {
-                    launchExternal(controller.profile.resumeUrl ?? '');
-                  }
-                },
-              ),
+          ),
+          SizedBox(width: 11.w),
+          Expanded(
+            child: SectionIconTile(
+              icon: Icons.description_outlined,
+              color: AppColors.iconCoral,
+              label: 'Résumé',
+              onTap: () {
+                final assetPath = controller.profile.resumeAssetPath;
+                if (assetPath != null) {
+                  openResumeAsset(assetPath);
+                } else {
+                  launchExternal(controller.profile.resumeUrl ?? '');
+                }
+              },
             ),
-            SizedBox(width: 11.w),
-            Expanded(
-              flex: 2,
-              child: TimeFrameControl(
-                era: era.era.value,
-                onTap: era.toggleEra,
-              ),
+          ),
+          SizedBox(width: 11.w),
+          Expanded(
+            flex: 4,
+            child: TimeFrameControl(
+              era: era.era.value,
+              onTap: era.toggleEra,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 }
 
-/// Commit heatmap (left) beside a 2x2 cluster of the four project app tiles.
 class _BandC extends StatelessWidget {
   const _BandC({required this.controller});
 
@@ -231,24 +218,34 @@ class _BandC extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final projects = controller.projects;
+    final hasPanel =
+        MediaQuery.sizeOf(context).width >= LayoutBreakpoints.desktopPanel;
+
+    final isWide =
+        MediaQuery.sizeOf(context).width >= LayoutBreakpoints.wide;
+    final bandGap = isWide ? 14.h : 5.h;
 
     return IntrinsicHeight(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const Expanded(flex: 2, child: CommitHeatmapWidget()),
+          const Expanded(flex: 3, child: CommitHeatmapWidget()),
           SizedBox(width: 11.w),
           Expanded(
             flex: 2,
             child: Column(
               children: [
                 for (var i = 0; i + 1 < projects.length; i += 2) ...[
-                  if (i > 0) SizedBox(height: 11.w),
+                  if (i > 0) SizedBox(height: bandGap),
                   Row(
                     children: [
-                      Expanded(child: _projectTile(projects[i])),
+                      Expanded(
+                        child: _projectTile(projects[i], hasPanel),
+                      ),
                       SizedBox(width: 11.w),
-                      Expanded(child: _projectTile(projects[i + 1])),
+                      Expanded(
+                        child: _projectTile(projects[i + 1], hasPanel),
+                      ),
                     ],
                   ),
                 ],
@@ -260,18 +257,25 @@ class _BandC extends StatelessWidget {
     );
   }
 
-  Widget _projectTile(Project project) {
+  Widget _projectTile(Project project, bool hasPanel) {
     final visual = projectVisual(project.id);
     return SectionIconTile(
       icon: visual.icon,
       color: visual.color,
       label: project.name.split(' ').first,
-      onTap: () => Get.to(
-        () => SectionPlaceholderScreen(
-          title: project.name,
-          subtitle: project.subtitle,
-        ),
-      ),
+      onTap: () {
+        if (hasPanel) {
+          Get.find<DesktopSelectionController>().selected.value =
+              SectionId.projects;
+        } else {
+          Get.to(
+            () => SectionPlaceholderScreen(
+              title: project.name,
+              subtitle: project.subtitle,
+            ),
+          );
+        }
+      },
     );
   }
 }
