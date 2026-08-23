@@ -206,14 +206,26 @@ class _PillButton extends StatelessWidget {
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
       child: Container(
-        width: 52.w,
         height: 30.h,
         decoration: BoxDecoration(
           color: background,
           borderRadius: BorderRadius.circular(15.r),
         ),
         alignment: Alignment.center,
-        child: Icon(icon, size: 16.sp, color: foreground),
+        child: Padding(
+          padding: EdgeInsets.only(left: 8.w, right: 8.w),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+            Icon(icon, size: 16.sp, color: foreground),
+            SizedBox(width: 4.w),
+            Text(
+              icon == Icons.call ? 'Contact' : 'Dial',
+              style: AppTheme.mono(size: 9.sp, color: foreground),
+            ),
+          ], ),
+        ),
       ),
     );
   }

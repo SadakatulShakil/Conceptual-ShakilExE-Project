@@ -40,6 +40,7 @@ dependencies:
   google_fonts: ^8.1.0
   url_launcher: ^6.3.2
   flutter_svg: ^2.3.0
+  video_player: ^2.10.1
 
 dev_dependencies:
   flutter_test:
@@ -67,6 +68,7 @@ flutter:
     - assets/images/modern_bg_mobile.jpg
     - assets/images/modern_bg_desktop.jpg
     - assets/resume/sadakatul_shakil_cv.pdf
+    - assets/videos/time_warp.mp4
 
   # To add assets to your application, add an assets section, like this:
   # assets:

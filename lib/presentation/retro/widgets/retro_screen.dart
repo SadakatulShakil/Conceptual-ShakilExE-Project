@@ -42,22 +42,6 @@ class RetroScreen extends StatelessWidget {
           SizedBox(height: 8.h),
           Container(height: 1, color: Colors.white.withOpacity(0.06)),
           SizedBox(height: 6.h),
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //   children: [
-          //     Text(
-          //       'Open',
-          //       style: AppTheme.mono(size: 9.sp, color: AppColors.accentSoft),
-          //     ),
-          //     Text(
-          //       'Back',
-          //       style: AppTheme.mono(
-          //         size: 9.sp,
-          //         color: AppColors.textSecondary,
-          //       ),
-          //     ),
-          //   ],
-          // ),
         ],
       ),
     );

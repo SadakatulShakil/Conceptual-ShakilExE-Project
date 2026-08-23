@@ -3,9 +3,6 @@ enum AppEra {
   retro,
   modern;
 
-  /// Persisted key value.
-  String get key => name;
-
   /// Label shown in the status-bar time control.
   String get yearLabel => switch (this) {
         AppEra.retro => "'03",
@@ -20,9 +17,4 @@ enum AppEra {
   /// The era you travel to when toggling.
   AppEra get opposite =>
       this == AppEra.modern ? AppEra.retro : AppEra.modern;
-
-  static AppEra fromKey(String? value) => AppEra.values.firstWhere(
-        (e) => e.key == value,
-        orElse: () => AppEra.retro, // default landing world
-      );
 }
