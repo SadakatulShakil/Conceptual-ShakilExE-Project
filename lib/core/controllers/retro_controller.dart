@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
+import '../../presentation/retro/retro_section_screen.dart';
 import '../../presentation/shared/section_config.dart';
-import '../../presentation/shared/section_placeholder_screen.dart';
 import '../enums/section_id.dart';
 
 /// Keypad/d-pad navigation state for the retro handset. Both the on-screen
@@ -65,10 +65,10 @@ class RetroController extends GetxController {
     }
   }
 
-  /// Unconditionally navigates to the highlighted section's placeholder
-  /// screen (Phase 4 will replace this with a real retro-native screen).
+  /// Unconditionally navigates to the highlighted section's in-character
+  /// retro screen.
   void openHighlighted() {
-    Get.to(() => SectionPlaceholderScreen(title: current.title));
+    Get.to(() => RetroSectionScreen(id: current.id));
   }
 
   /// Focuses and opens the Contact section — the green call key.

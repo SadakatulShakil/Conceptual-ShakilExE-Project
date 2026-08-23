@@ -5,8 +5,7 @@ import '../../../core/controllers/portfolio_controller.dart';
 import '../../../core/enums/section_id.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_theme.dart';
-import '../../shared/section_config.dart';
-import '../../shared/section_placeholder_screen.dart';
+import '../modern_section_screen.dart';
 
 /// Card highlighting the project currently in progress
 /// ([Project.isBuilding]) — a mock "now playing" transport strip.
@@ -17,11 +16,9 @@ class NowBuildingWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.find<PortfolioController>();
     final building = controller.projects.firstWhere((p) => p.isBuilding);
-    final nowSection = kSections.firstWhere((s) => s.id == SectionId.now);
 
     return GestureDetector(
-      onTap: () =>
-          Get.to(() => SectionPlaceholderScreen(title: nowSection.title)),
+      onTap: () => Get.to(() => const ModernSectionScreen(id: SectionId.now)),
       behavior: HitTestBehavior.opaque,
       child: Container(
         padding: EdgeInsets.all(14.w),

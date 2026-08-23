@@ -12,7 +12,8 @@ import '../../domain/entities/project.dart';
 import '../shared/layout_breakpoints.dart';
 import '../shared/project_visuals.dart';
 import '../shared/section_config.dart';
-import '../shared/section_placeholder_screen.dart';
+import 'modern_project_detail.dart';
+import 'modern_section_screen.dart';
 import 'widgets/commit_heatmap_widget.dart';
 import 'widgets/identity_card.dart';
 import 'widgets/modern_status_bar.dart';
@@ -149,7 +150,7 @@ class _BandA extends StatelessWidget {
         if (hasPanel) {
           Get.find<DesktopSelectionController>().selected.value = id;
         } else {
-          Get.to(() => SectionPlaceholderScreen(title: section.title));
+          Get.to(() => ModernSectionScreen(id: id));
         }
       },
     );
@@ -268,12 +269,7 @@ class _BandC extends StatelessWidget {
           Get.find<DesktopSelectionController>().selected.value =
               SectionId.projects;
         } else {
-          Get.to(
-            () => SectionPlaceholderScreen(
-              title: project.name,
-              subtitle: project.subtitle,
-            ),
-          );
+          Get.to(() => ModernProjectDetail(project: project));
         }
       },
     );

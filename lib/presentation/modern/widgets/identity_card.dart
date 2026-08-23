@@ -5,8 +5,7 @@ import '../../../core/controllers/portfolio_controller.dart';
 import '../../../core/enums/section_id.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_theme.dart';
-import '../../shared/section_config.dart';
-import '../../shared/section_placeholder_screen.dart';
+import '../modern_section_screen.dart';
 
 /// Compact profile card: avatar initials, name, and a one-line subtitle.
 class IdentityCard extends StatelessWidget {
@@ -16,10 +15,9 @@ class IdentityCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.find<PortfolioController>();
     final profile = controller.profile;
-    final about = kSections.firstWhere((s) => s.id == SectionId.about);
 
     return GestureDetector(
-      onTap: () => Get.to(() => SectionPlaceholderScreen(title: about.title)),
+      onTap: () => Get.to(() => const ModernSectionScreen(id: SectionId.about)),
       behavior: HitTestBehavior.opaque,
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
