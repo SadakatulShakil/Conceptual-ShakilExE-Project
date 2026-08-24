@@ -1,4 +1,3 @@
 User-agent: *
 Allow: /
-
-Sitemap: https://REPLACE-WITH-YOUR-DOMAIN/sitemap.xml
+Sitemap: https://shakil-exe.web.app/sitemap.xml
