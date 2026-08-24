@@ -19,20 +19,64 @@
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
   <meta name="description" content="A new Flutter project.">
+  <meta name="theme-color" content="#0D0D0F">
+
+  <!-- Dark background immediately, before Flutter boots — avoids a white
+       flash on load. Full SEO/OpenGraph tags land in Phase 7. -->
+  <style>
+    html, body { background: #0D0D0F; margin: 0; height: 100%; }
+  </style>
 
   <!-- iOS meta tags & icons -->
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="shakilexefile">
+  <meta name="apple-mobile-web-app-title" content="Shakil ExE">
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="favicon.png"/>
 
-  <title>shakilexefile</title>
+  <title>Sadakatul Shakil — Mobile Engineer</title>
   <link rel="manifest" href="manifest.json">
 </head>
 <body>
+  <!-- Minimal splash shown until Flutter renders its first frame, so the
+       dark background isn't just an empty void while assets load. -->
+  <div id="loading" style="
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background: #0D0D0F;
+    font-family: 'Courier New', monospace;
+    color: #7F77DD;
+    letter-spacing: 4px;
+    z-index: 9999;
+  ">
+    <div style="
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #7F77DD;
+      animation: loading-pulse 1.1s ease-in-out infinite;
+    "></div>
+    <span>SHAKIL.EXE</span>
+  </div>
+  <style>
+    @keyframes loading-pulse {
+      0%, 100% { opacity: 0.25; transform: scale(0.85); }
+      50% { opacity: 1; transform: scale(1); }
+    }
+  </style>
+  <script>
+    window.addEventListener('flutter-first-frame', function () {
+      var loader = document.getElementById('loading');
+      if (loader) loader.remove();
+    });
+  </script>
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>

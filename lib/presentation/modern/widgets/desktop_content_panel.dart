@@ -53,7 +53,10 @@ class DesktopContentPanel extends StatelessWidget {
             Expanded(
               child: Obx(
                 () => SingleChildScrollView(
-                  child: ModernSectionView(id: selection.selected.value),
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 760),
+                    child: ModernSectionView(id: selection.selected.value),
+                  ),
                 ),
               ),
             ),

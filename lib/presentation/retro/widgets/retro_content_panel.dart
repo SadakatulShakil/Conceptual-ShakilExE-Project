@@ -54,7 +54,10 @@ class RetroContentPanel extends StatelessWidget {
             Expanded(
               child: Obx(
                 () => SingleChildScrollView(
-                  child: RetroSectionView(id: retro.current.id),
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 860),
+                    child: RetroSectionView(id: retro.current.id),
+                  ),
                 ),
               ),
             ),

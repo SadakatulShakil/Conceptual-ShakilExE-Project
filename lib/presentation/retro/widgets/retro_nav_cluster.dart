@@ -5,6 +5,7 @@ import '../../../core/controllers/era_controller.dart';
 import '../../../core/controllers/retro_controller.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../shared/clickable.dart';
 
 /// The soft-key row, circular d-pad with an OK center, and the call/end
 /// pills beneath the LCD.
@@ -29,9 +30,8 @@ class RetroNavCluster extends StatelessWidget {
               onTap: controller.openContact,
             ),
             _DPad(controller: controller),
-            GestureDetector(
+            Clickable(
               onTap: era.toggleEra,
-              behavior: HitTestBehavior.opaque,
               child: Container(
                 padding:
                 EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
@@ -145,9 +145,8 @@ class _DPad extends StatelessWidget {
               onTap: controller.moveRight,
             ),
           ),
-          GestureDetector(
+          Clickable(
             onTap: controller.confirmOpen,
-            behavior: HitTestBehavior.opaque,
             child: Container(
               width: 34.w,
               height: 34.w,
@@ -176,9 +175,8 @@ class _Chevron extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return Clickable(
       onTap: onTap,
-      behavior: HitTestBehavior.opaque,
       child: Padding(
         padding: EdgeInsets.all(6.w),
         child: Icon(icon, size: 16.sp, color: AppColors.textMuted),
@@ -202,9 +200,8 @@ class _PillButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return Clickable(
       onTap: onTap,
-      behavior: HitTestBehavior.opaque,
       child: Container(
         height: 30.h,
         decoration: BoxDecoration(

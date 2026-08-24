@@ -11,6 +11,7 @@ import '../../../domain/entities/experience_item.dart';
 import '../../../domain/entities/profile.dart';
 import '../../../domain/entities/project.dart';
 import '../../../domain/entities/skill_group.dart';
+import '../../shared/clickable.dart';
 import '../../shared/contact_visuals.dart';
 import '../../shared/project_visuals.dart';
 
@@ -86,11 +87,10 @@ class _ProjectRow extends StatelessWidget {
     final visual = projectVisual(project.id);
     return Padding(
       padding: EdgeInsets.only(bottom: 16.h),
-      child: GestureDetector(
+      child: Clickable(
         onTap: project.storeUrl != null
             ? () => launchExternal(project.storeUrl!)
             : null,
-        behavior: HitTestBehavior.opaque,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -293,7 +293,7 @@ class _ResumeRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return Clickable(
       onTap: () {
         final assetPath = controller.profile.resumeAssetPath;
         if (assetPath != null) {
@@ -302,7 +302,6 @@ class _ResumeRow extends StatelessWidget {
           launchExternal(controller.profile.resumeUrl ?? '');
         }
       },
-      behavior: HitTestBehavior.opaque,
       child: Row(
         children: [
           Icon(
@@ -330,9 +329,8 @@ class _ContactRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(bottom: 10.h),
-      child: GestureDetector(
+      child: Clickable(
         onTap: () => launchExternal(link.url),
-        behavior: HitTestBehavior.opaque,
         child: Row(
           children: [
             Icon(

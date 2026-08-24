@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../shared/clickable.dart';
 
 /// A single physical-style key on the retro keypad: a big glyph/number plus
 /// an optional tiny sub-label (T9 letters).
@@ -28,9 +29,8 @@ class RetroKey extends StatelessWidget {
   Widget build(BuildContext context) {
     final tint = accentColor ?? AppColors.accentSoft;
 
-    return GestureDetector(
+    return Clickable(
       onTap: onTap,
-      behavior: HitTestBehavior.opaque,
       child: Container(
         height: 45.h,
         decoration: BoxDecoration(

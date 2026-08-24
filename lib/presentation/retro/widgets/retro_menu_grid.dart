@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import '../../../core/controllers/retro_controller.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../shared/clickable.dart';
 import '../../shared/section_config.dart';
 
 /// The retro home screen's 3x3 app menu — the nine [kSections] laid out by
@@ -63,9 +64,8 @@ class _MenuCell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return Clickable(
       onTap: onTap,
-      behavior: HitTestBehavior.opaque,
       child: AspectRatio(
         aspectRatio: 1,
         child: Container(

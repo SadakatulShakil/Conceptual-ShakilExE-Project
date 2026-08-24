@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 
 import 'core/bindings/root_binding.dart';
 import 'core/theme/app_theme.dart';
+import 'core/utils/app_scroll_behavior.dart';
 import 'presentation/root/root_view.dart';
 
 void main() {
@@ -27,6 +28,7 @@ class ShakilExeApp extends StatelessWidget {
         title: 'Shakil ExE',
         debugShowCheckedModeBanner: false,
         theme: AppTheme.dark,
+        scrollBehavior: const AppScrollBehavior(),
         initialBinding: RootBinding(),
         home: const RootView(),
       ),

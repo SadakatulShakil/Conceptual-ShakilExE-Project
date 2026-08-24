@@ -10,6 +10,7 @@ import '../../../domain/entities/experience_item.dart';
 import '../../../domain/entities/profile.dart';
 import '../../../domain/entities/project.dart';
 import '../../../domain/entities/skill_group.dart';
+import '../../shared/clickable.dart';
 import '../../shared/contact_visuals.dart';
 import '../../shared/project_visuals.dart';
 import '../modern_project_detail.dart';
@@ -100,6 +101,7 @@ class _ProjectRow extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 20),
       child: InkWell(
         borderRadius: BorderRadius.circular(14),
+        mouseCursor: SystemMouseCursors.click,
         onTap: () => Get.to(() => ModernProjectDetail(project: project)),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -345,9 +347,8 @@ class _ContactChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return Clickable(
       onTap: () => launchExternal(link.url),
-      behavior: HitTestBehavior.opaque,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
         decoration: BoxDecoration(
@@ -377,7 +378,7 @@ class _ResumeContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return Clickable(
       onTap: () {
         final assetPath = profile.resumeAssetPath;
         if (assetPath != null) {
@@ -386,7 +387,6 @@ class _ResumeContent extends StatelessWidget {
           launchExternal(profile.resumeUrl ?? '');
         }
       },
-      behavior: HitTestBehavior.opaque,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
@@ -426,9 +426,8 @@ class _ContactRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
-      child: GestureDetector(
+      child: Clickable(
         onTap: () => launchExternal(link.url),
-        behavior: HitTestBehavior.opaque,
         child: Row(
           children: [
             Container(

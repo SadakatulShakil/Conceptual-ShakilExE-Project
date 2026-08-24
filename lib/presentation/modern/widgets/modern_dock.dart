@@ -7,6 +7,7 @@ import '../../../core/controllers/portfolio_controller.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/url_utils.dart';
 import '../../../domain/entities/contact_link.dart';
+import '../../shared/clickable.dart';
 
 /// Bottom dock of quick-launch contact buttons, one per [ContactLink].
 ///
@@ -70,9 +71,8 @@ class _DockButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: GestureDetector(
+      child: Clickable(
         onTap: () => launchExternal(link.url),
-        behavior: HitTestBehavior.opaque,
         child: Container(
           width: 52.w,
           height: 52.w,
