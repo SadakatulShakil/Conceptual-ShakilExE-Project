@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -8,13 +6,13 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/url_utils.dart';
 import '../../../domain/entities/contact_link.dart';
 import '../../shared/clickable.dart';
+import '../../shared/glass_card.dart';
 
 /// Bottom dock of quick-launch contact buttons, one per [ContactLink].
 ///
-/// Sits pinned on top of the scrollable content, so it needs a frosted-glass
-/// treatment (blur + a solid-enough tint) rather than a near-invisible tint
-/// alone — otherwise scrolling content shows straight through it and reads
-/// as a rendering glitch rather than a dock.
+/// Sits pinned on top of the scrollable content, so it needs a
+/// frosted-glass treatment strong enough that scrolling content doesn't
+/// show through — hence a higher [blurSigma] than the other glass cards.
 class ModernDock extends StatelessWidget {
   const ModernDock({super.key});
 
@@ -22,26 +20,14 @@ class ModernDock extends StatelessWidget {
   Widget build(BuildContext context) {
     final links = Get.find<PortfolioController>().profile.links;
 
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(26.r),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
-        child: Container(
-          padding: EdgeInsets.symmetric(vertical: 16.h),
-          decoration: BoxDecoration(
-            color: AppColors.screenBg.withOpacity(0.82),
-            borderRadius: BorderRadius.circular(26.r),
-            border: Border.all(
-              color: Colors.white.withOpacity(0.08),
-            ),
-          ),
-          child: Row(
-            children: [
-              for (final link in links)
-                Expanded(child: _DockButton(link: link)),
-            ],
-          ),
-        ),
+    return GlassCard(
+      radius: 26.r,
+      blurSigma: 24,
+      padding: EdgeInsets.symmetric(vertical: 16.h),
+      child: Row(
+        children: [
+          for (final link in links) Expanded(child: _DockButton(link: link)),
+        ],
       ),
     );
   }
@@ -77,8 +63,9 @@ class _DockButton extends StatelessWidget {
           width: 52.w,
           height: 52.w,
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.08),
+            color: Colors.white.withOpacity(0.12),
             shape: BoxShape.circle,
+            border: Border.all(color: AppColors.glassBorder, width: 1),
           ),
           alignment: Alignment.center,
           child: Icon(_icon, size: 24.sp, color: _color),

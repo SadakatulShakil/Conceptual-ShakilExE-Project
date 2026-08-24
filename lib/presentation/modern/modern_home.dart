@@ -11,6 +11,7 @@ import '../../domain/entities/contact_link.dart';
 import '../../domain/entities/project.dart';
 import '../shared/layout_breakpoints.dart';
 import '../shared/project_visuals.dart';
+import '../shared/resume_viewer_screen.dart';
 import '../shared/section_config.dart';
 import 'modern_project_detail.dart';
 import 'modern_section_screen.dart';
@@ -187,14 +188,7 @@ class _BandB extends StatelessWidget {
               icon: Icons.description_outlined,
               color: AppColors.iconCoral,
               label: 'Résumé',
-              onTap: () {
-                final assetPath = controller.profile.resumeAssetPath;
-                if (assetPath != null) {
-                  openResumeAsset(assetPath);
-                } else {
-                  launchExternal(controller.profile.resumeUrl ?? '');
-                }
-              },
+              onTap: () => openResume(controller.profile),
             ),
           ),
           SizedBox(width: 11.w),
@@ -218,7 +212,7 @@ class _BandC extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final projects = controller.projects;
+    final projects = controller.featuredProjects.take(4).toList();
     final hasPanel =
         MediaQuery.sizeOf(context).width >= LayoutBreakpoints.desktopPanel;
 

@@ -31,6 +31,10 @@ class Project {
   /// "Phase 5 · Parent Zone" (null when the project isn't in progress).
   final String? buildingNote;
 
+  /// Whether this project appears in the modern home's 2x2 app-tile
+  /// cluster. All other projects still appear in the full Projects list.
+  final bool featured;
+
   const Project({
     required this.id,
     required this.name,
@@ -45,6 +49,7 @@ class Project {
     this.rating,
     this.installs,
     this.buildingNote,
+    this.featured = false,
   });
 
   bool get isLive => status == ProjectStatus.live;

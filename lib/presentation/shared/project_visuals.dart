@@ -24,5 +24,18 @@ ProjectVisual projectVisual(String id) => switch (id) {
           Icons.child_care_rounded,
           AppColors.iconGreen,
         ),
+      'landslide' => const ProjectVisual(Icons.terrain, AppColors.iconAmber),
+      'wzpdcl' => const ProjectVisual(
+          Icons.electric_bolt,
+          AppColors.iconAmber,
+        ),
+      'laalsobuj_user' => const ProjectVisual(
+          Icons.shopping_bag_outlined,
+          AppColors.iconGreen,
+        ),
+      'laalsobuj_seller' => const ProjectVisual(
+          Icons.storefront_outlined,
+          AppColors.iconCoral,
+        ),
       _ => const ProjectVisual(Icons.apps_rounded, AppColors.iconGray),
     };

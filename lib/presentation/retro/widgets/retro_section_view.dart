@@ -7,6 +7,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/url_utils.dart';
 import '../../../domain/entities/contact_link.dart';
+import '../../../domain/entities/education.dart';
 import '../../../domain/entities/experience_item.dart';
 import '../../../domain/entities/profile.dart';
 import '../../../domain/entities/project.dart';
@@ -14,6 +15,7 @@ import '../../../domain/entities/skill_group.dart';
 import '../../shared/clickable.dart';
 import '../../shared/contact_visuals.dart';
 import '../../shared/project_visuals.dart';
+import '../../shared/resume_viewer_screen.dart';
 
 /// Full content for a given [SectionId], rendered mono/screenutil — the
 /// single source shared by [RetroContentPanel] (wide viewport) and
@@ -30,28 +32,35 @@ class RetroSectionView extends StatelessWidget {
     switch (id) {
       case SectionId.projects:
         return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             for (final p in controller.projects) _ProjectRow(project: p),
           ],
         );
       case SectionId.experience:
         return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             for (final e in controller.experience) _ExperienceRow(item: e),
           ],
         );
       case SectionId.skills:
         return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             for (final g in controller.skills) _SkillRow(group: g),
           ],
         );
       case SectionId.about:
-        return _AboutContent(profile: controller.profile);
+        return _AboutContent(
+          profile: controller.profile,
+          education: controller.education,
+        );
       case SectionId.resume:
         return _ResumeRow(controller: controller);
       case SectionId.contact:
         return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             for (final l in controller.profile.links) _ContactRow(link: l),
           ],
@@ -63,14 +72,13 @@ class RetroSectionView extends StatelessWidget {
             ? _ContactRow(link: github)
             : const _TextBlock(text: 'Not set yet.');
       case SectionId.now:
-        final building =
-            controller.projects.firstWhereOrNull((p) => p.isBuilding);
-        return building != null
-            ? _TextBlock(
-                heading: building.name,
-                text: building.buildingNote ?? building.description,
-              )
-            : const _TextBlock(text: 'Nothing in progress right now.');
+        final building = controller.projects.where((p) => p.isBuilding).toList();
+        return building.isEmpty
+            ? const _TextBlock(text: 'Nothing in progress right now.')
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [for (final p in building) _ProjectRow(project: p)],
+              );
       case SectionId.extras:
         return const _TextBlock(text: 'More extras coming soon.');
     }
@@ -254,9 +262,10 @@ class _SkillRow extends StatelessWidget {
 }
 
 class _AboutContent extends StatelessWidget {
-  const _AboutContent({required this.profile});
+  const _AboutContent({required this.profile, required this.education});
 
   final Profile profile;
+  final List<Education> education;
 
   @override
   Widget build(BuildContext context) {
@@ -281,6 +290,30 @@ class _AboutContent extends StatelessWidget {
           '${profile.location} · ${profile.yearsExperience}+ yrs',
           style: AppTheme.mono(size: 9.sp, color: AppColors.textMuted),
         ),
+        if (education.isNotEmpty) ...[
+          SizedBox(height: 12.h),
+          Text(
+            'EDUCATION',
+            style: AppTheme.mono(size: 10.sp, weight: FontWeight.w500),
+          ),
+          SizedBox(height: 6.h),
+          for (final e in education)
+            Padding(
+              padding: EdgeInsets.only(bottom: 4.h),
+              child: Text(
+                '${e.degree} — ${e.institution} — ${e.period} · ${e.grade}',
+                style: AppTheme.mono(
+                  size: 9.sp,
+                  color: AppColors.textSecondary,
+                ),
+              ),
+            ),
+        ],
+        SizedBox(height: 6.h),
+        Text(
+          'Languages: Bangla (native), English (professional)',
+          style: AppTheme.mono(size: 9.sp, color: AppColors.textMuted),
+        ),
       ],
     );
   }
@@ -294,14 +327,7 @@ class _ResumeRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Clickable(
-      onTap: () {
-        final assetPath = controller.profile.resumeAssetPath;
-        if (assetPath != null) {
-          openResumeAsset(assetPath);
-        } else {
-          launchExternal(controller.profile.resumeUrl ?? '');
-        }
-      },
+      onTap: () => openResume(controller.profile),
       child: Row(
         children: [
           Icon(
@@ -351,32 +377,15 @@ class _ContactRow extends StatelessWidget {
 }
 
 class _TextBlock extends StatelessWidget {
-  const _TextBlock({this.heading, required this.text});
+  const _TextBlock({required this.text});
 
-  final String? heading;
   final String text;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        if (heading != null) ...[
-          Text(
-            heading!,
-            style: AppTheme.mono(
-              size: 11.sp,
-              weight: FontWeight.w500,
-              color: AppColors.accentSoft,
-            ),
-          ),
-          SizedBox(height: 8.h),
-        ],
-        Text(
-          text,
-          style: AppTheme.mono(size: 10.sp, color: AppColors.textSecondary),
-        ),
-      ],
+    return Text(
+      text,
+      style: AppTheme.mono(size: 10.sp, color: AppColors.textSecondary),
     );
   }
 }

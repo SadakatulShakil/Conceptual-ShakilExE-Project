@@ -67,8 +67,8 @@ class RetroKeypad extends StatelessWidget {
         ),
         SizedBox(height: 6.h),
         Text(
-          '# time travel',
-          style: AppTheme.mono(size: 7.sp, color: AppColors.textMuted),
+          'Press # to time travel',
+          style: AppTheme.mono(size: 10.sp, color: AppColors.timeWarp),
         ),
       ],
     );

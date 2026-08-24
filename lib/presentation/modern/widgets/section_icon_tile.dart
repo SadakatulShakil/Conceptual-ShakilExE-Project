@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../shared/clickable.dart';
+import '../../shared/glass_card.dart';
 
 /// A single square app-icon tile used across the modern launcher grid —
 /// sections, projects, and quick links all render through this. When
@@ -35,15 +35,19 @@ class SectionIconTile extends StatelessWidget {
           Container(
             width: 48.w,
             height: 48.w,
-            decoration: BoxDecoration(
-              color: selected ? color.withOpacity(0.2) : AppColors.tile,
-              borderRadius: BorderRadius.circular(14.r),
-              border: selected
-                  ? Border.all(color: color.withOpacity(0.7), width: 1.5)
-                  : null,
+            foregroundDecoration: selected
+                ? BoxDecoration(
+                    color: color.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(13.r),
+                    border: Border.all(color: color.withOpacity(0.7), width: 1.5),
+                  )
+                : null,
+            child: GlassCard(
+              radius: 13.r,
+              child: Center(
+                child: Icon(icon, color: color, size: 23.sp),
+              ),
             ),
-            alignment: Alignment.center,
-            child: Icon(icon, color: color, size: 23.sp),
           ),
           SizedBox(height: 6.h),
           Text(

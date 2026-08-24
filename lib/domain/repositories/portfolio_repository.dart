@@ -1,3 +1,4 @@
+import '../entities/education.dart';
 import '../entities/experience_item.dart';
 import '../entities/profile.dart';
 import '../entities/project.dart';
@@ -11,4 +12,5 @@ abstract class PortfolioRepository {
   List<Project> getProjects();
   List<ExperienceItem> getExperience();
   List<SkillGroup> getSkills();
+  List<Education> getEducation();
 }

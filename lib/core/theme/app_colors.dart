@@ -16,6 +16,13 @@ class AppColors {
   static const Color tile = Color(0x0FFFFFFF); // ~6% white
   static const Color tileHover = Color(0x1AFFFFFF); // ~10% white
 
+  // Frosted glass (modern shell only — see GlassCard)
+  static const Color glassTop = Color(0x24FFFFFF); // ~14% white
+  static const Color glassBottom = Color(0x14FFFFFF); // ~8% white
+  static const Color glassBorder = Color(0x2EFFFFFF); // ~18% white hairline
+  static const Color glassTopWeb = Color(0x30FFFFFF); // ~19%, no-blur fallback
+  static const Color glassBottomWeb = Color(0x1FFFFFFF); // ~12%
+
   // Text
   static const Color textPrimary = Color(0xFFF2F2F4);
   static const Color textSecondary = Color(0xFF9A9A9E);

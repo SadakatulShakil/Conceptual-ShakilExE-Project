@@ -41,6 +41,7 @@ dependencies:
   url_launcher: ^6.3.2
   flutter_svg: ^2.3.0
   video_player: ^2.10.1
+  pdfx: ^2.11.0
 
 dev_dependencies:
   flutter_test:

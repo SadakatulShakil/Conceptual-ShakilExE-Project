@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../core/controllers/desktop_selection_controller.dart';
-import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../shared/glass_card.dart';
 import '../../shared/section_config.dart';
 import 'modern_section_view.dart';
 
@@ -26,12 +26,9 @@ class DesktopContentPanel extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       height: height,
-      child: Container(
+      child: GlassCard(
+        radius: 20,
         padding: const EdgeInsets.all(22),
-        decoration: BoxDecoration(
-          color: AppColors.tile,
-          borderRadius: BorderRadius.circular(24),
-        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

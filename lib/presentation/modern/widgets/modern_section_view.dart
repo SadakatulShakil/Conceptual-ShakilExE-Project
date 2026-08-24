@@ -6,6 +6,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/url_utils.dart';
 import '../../../domain/entities/contact_link.dart';
+import '../../../domain/entities/education.dart';
 import '../../../domain/entities/experience_item.dart';
 import '../../../domain/entities/profile.dart';
 import '../../../domain/entities/project.dart';
@@ -13,6 +14,7 @@ import '../../../domain/entities/skill_group.dart';
 import '../../shared/clickable.dart';
 import '../../shared/contact_visuals.dart';
 import '../../shared/project_visuals.dart';
+import '../../shared/resume_viewer_screen.dart';
 import '../modern_project_detail.dart';
 import 'modern_chips.dart';
 
@@ -31,28 +33,35 @@ class ModernSectionView extends StatelessWidget {
     switch (id) {
       case SectionId.projects:
         return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             for (final p in controller.projects) _ProjectRow(project: p),
           ],
         );
       case SectionId.experience:
         return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             for (final e in controller.experience) _ExperienceRow(item: e),
           ],
         );
       case SectionId.skills:
         return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             for (final g in controller.skills) _SkillRow(group: g),
           ],
         );
       case SectionId.about:
-        return _AboutContent(profile: controller.profile);
+        return _AboutContent(
+          profile: controller.profile,
+          education: controller.education,
+        );
       case SectionId.resume:
         return _ResumeContent(profile: controller.profile);
       case SectionId.contact:
         return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             for (final l in controller.profile.links) _ContactRow(link: l),
           ],
@@ -64,11 +73,13 @@ class ModernSectionView extends StatelessWidget {
             ? _ContactRow(link: github)
             : _EmptyNote(text: 'Not set yet.');
       case SectionId.now:
-        final building =
-            controller.projects.firstWhereOrNull((p) => p.isBuilding);
-        return building != null
-            ? _NowContent(project: building)
-            : _EmptyNote(text: 'Nothing in progress.');
+        final building = controller.projects.where((p) => p.isBuilding).toList();
+        return building.isEmpty
+            ? _EmptyNote(text: 'Nothing in progress.')
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [for (final p in building) _ProjectRow(project: p)],
+              );
       case SectionId.extras:
         return _EmptyNote(text: 'More extras coming soon.');
     }
@@ -298,9 +309,10 @@ class _SkillRow extends StatelessWidget {
 }
 
 class _AboutContent extends StatelessWidget {
-  const _AboutContent({required this.profile});
+  const _AboutContent({required this.profile, required this.education});
 
   final Profile profile;
+  final List<Education> education;
 
   @override
   Widget build(BuildContext context) {
@@ -335,6 +347,30 @@ class _AboutContent extends StatelessWidget {
             ],
           ),
         ],
+        if (education.isNotEmpty) ...[
+          const SizedBox(height: 18),
+          Text(
+            'Education',
+            style: AppTheme.sans(size: 12, weight: FontWeight.w600),
+          ),
+          const SizedBox(height: 8),
+          for (final e in education)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 6),
+              child: Text(
+                '${e.degree} — ${e.institution} — ${e.period} · ${e.grade}',
+                style: AppTheme.sans(
+                  size: 11.5,
+                  color: AppColors.textSecondary,
+                ),
+              ),
+            ),
+        ],
+        const SizedBox(height: 4),
+        Text(
+          'Languages: Bangla (native), English (professional)',
+          style: AppTheme.sans(size: 11, color: AppColors.textMuted),
+        ),
       ],
     );
   }
@@ -379,14 +415,7 @@ class _ResumeContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Clickable(
-      onTap: () {
-        final assetPath = profile.resumeAssetPath;
-        if (assetPath != null) {
-          openResumeAsset(assetPath);
-        } else {
-          launchExternal(profile.resumeUrl ?? '');
-        }
-      },
+      onTap: () => openResume(profile),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
@@ -452,34 +481,6 @@ class _ContactRow extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-class _NowContent extends StatelessWidget {
-  const _NowContent({required this.project});
-
-  final Project project;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          project.name,
-          style: AppTheme.sans(
-            size: 14,
-            weight: FontWeight.w600,
-            color: AppColors.accentSoft,
-          ),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          project.buildingNote ?? project.description,
-          style: AppTheme.sans(size: 12, color: AppColors.textSecondary),
-        ),
-      ],
     );
   }
 }

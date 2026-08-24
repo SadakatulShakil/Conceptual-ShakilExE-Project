@@ -6,6 +6,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/url_utils.dart';
 import '../../../domain/entities/contact_link.dart';
+import '../../shared/glass_card.dart';
 
 // TODO: wire real GitHub contributions later.
 const List<int> _kCommitIntensities = [
@@ -27,12 +28,9 @@ class CommitHeatmapWidget extends StatelessWidget {
     return GestureDetector(
       onTap: () => launchExternal(github?.url ?? ''),
       behavior: HitTestBehavior.opaque,
-      child: Container(
+      child: GlassCard(
+        radius: 18.r,
         padding: EdgeInsets.all(14.w),
-        decoration: BoxDecoration(
-          color: AppColors.tile,
-          borderRadius: BorderRadius.circular(18.r),
-        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
