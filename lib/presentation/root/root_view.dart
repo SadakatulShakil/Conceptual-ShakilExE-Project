@@ -70,9 +70,14 @@ class _RootViewState extends State<RootView>
   @override
   Widget build(BuildContext context) {
     return Obx(() {
+      // Not const: `isTravelling` flipping false at the end of a warp needs
+      // to trigger a real rebuild of the shown shell (via this Obx) so its
+      // ScreenUtil re-point runs again against the current viewport — the
+      // same corrective pass a manual resize provides today. The ValueKey
+      // keeps each era's shell as a distinct, stable element across eras.
       final shell = _shownEra == AppEra.modern
-          ? const ModernShell()
-          : const RetroShell();
+          ? ModernShell(key: const ValueKey('modern'))
+          : RetroShell(key: const ValueKey('retro'));
 
       return Scaffold(
         body: Stack(

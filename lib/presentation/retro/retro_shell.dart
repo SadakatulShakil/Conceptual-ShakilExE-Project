@@ -146,7 +146,18 @@ class _RetroShellState extends State<RetroShell> {
       data: mediaQuery.copyWith(size: Size(handsetWidth, handsetHeight)),
     );
 
-    const handset = RetroHandset();
+    // Deliberately NOT `const`: a canonical `const RetroHandset()` would be
+    // the exact same object every time this method runs, and Flutter skips
+    // calling `build()` again on an unchanged (`==`) widget — silently
+    // freezing its `.w/.h/.sp` at whatever scale was active the first time
+    // it was ever built. A fresh instance forces it to rebuild, and the
+    // SizedBox + ClipRect hard-bound it so a wrong scale can never balloon
+    // it past this box.
+    final handset = SizedBox(
+      width: handsetWidth,
+      height: handsetHeight,
+      child: ClipRect(child: RetroHandset()),
+    );
 
     Widget content;
     if (showPanel) {
@@ -156,7 +167,6 @@ class _RetroShellState extends State<RetroShell> {
           child: SizedBox(
             height: handsetHeight,
             child: Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 handset,
                 const SizedBox(width: 32),

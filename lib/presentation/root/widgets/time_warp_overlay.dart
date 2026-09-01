@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:video_player/video_player.dart';
 import '../../../core/controllers/era_controller.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_theme.dart';
-import '../../shared/full_viewport_scale.dart';
 
 /// Background clip illustrating every warp between worlds. Bundled at
 /// 10.41666s (250 frames @ 24fps) — longer than [EraController.warpDuration],
@@ -120,8 +118,6 @@ class _TimeWarpOverlayState extends State<TimeWarpOverlay> {
       return const SizedBox.shrink();
     }
 
-    configureFullViewportScale(context);
-
     return Positioned.fill(
       child: IgnorePointer(
         child: Opacity(
@@ -193,7 +189,7 @@ class _YearReadout extends StatelessWidget {
     return Text(
       year,
       style: AppTheme.mono(
-        size: 45.sp,
+        size: 45,
         weight: FontWeight.bold,
         color: AppColors.timeWarpSoft,
       ),

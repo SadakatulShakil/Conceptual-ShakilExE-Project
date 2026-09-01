@@ -30,7 +30,13 @@ class DesktopContentPanel extends StatelessWidget {
         radius: 20,
         padding: const EdgeInsets.all(22),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          // `stretch`, not `start`: gives the Expanded/SingleChildScrollView
+          // below a TIGHT (full panel) width, so its scrollbar hugs the
+          // panel's true right edge. `start` gave it a LOOSE width instead,
+          // so it shrank to match the capped-width content, leaving the
+          // scrollbar stranded with a gap of empty panel to its right. The
+          // inner ConstrainedBox still caps and left-aligns the content.
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Obx(() {
               final section = kSections

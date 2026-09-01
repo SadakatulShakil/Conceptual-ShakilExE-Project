@@ -28,12 +28,12 @@ class ModernShell extends StatelessWidget {
   static const double _designContentHeight = 620;
   static const double _frameBezel = 12;
 
-  @override
-  Widget build(BuildContext context) {
-    final mediaQuery = MediaQuery.of(context);
-    final isWide = mediaQuery.size.width >= _wideBreakpoint;
-
-    final launcher = SizedBox.expand(
+  /// The scrollable content + pinned dock. Built AFTER `ScreenUtil.configure`
+  /// so every `.w/.h` inside it (and inside `ModernHome`/`ModernDock`) reads
+  /// the config for THIS build, never a stale one left over from the other
+  /// era's last-configured design box.
+  Widget _buildLauncher() {
+    return SizedBox.expand(
       child: Stack(
         children: [
           Positioned.fill(
@@ -43,7 +43,13 @@ class ModernShell extends StatelessWidget {
               // bottom safe-area inset, with headroom so the last content
               // card (IdentityCard) never sits under it.
               padding: EdgeInsets.only(bottom: 148.h),
-              child: const SafeArea(bottom: false, child: ModernHome()),
+              // Not const: a canonical `const ModernHome()` would be the
+              // exact same object every time `_buildLauncher` runs, and
+              // Flutter skips calling `build()` again on an unchanged
+              // widget — silently freezing every `.w/.h/.sp` inside
+              // ModernHome's whole tree at whatever scale was active the
+              // first time it was ever built.
+              child: SafeArea(bottom: false, child: ModernHome()),
             ),
           ),
           Positioned(
@@ -54,16 +60,21 @@ class ModernShell extends StatelessWidget {
               top: false,
               child: Padding(
                 padding: EdgeInsets.fromLTRB(10.w, 0, 10.w, 10.h),
-                child: const ModernDock(),
+                child: ModernDock(),
               ),
             ),
           ),
         ],
       ),
     );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final mediaQuery = MediaQuery.of(context);
+    final isWide = mediaQuery.size.width >= _wideBreakpoint;
 
     if (isWide) {
-
       var frameWidth = _frameMaxWidth;
       var frameHeight =
           _designContentHeight * (frameWidth / 375) + _frameBezel * 2;
@@ -78,11 +89,17 @@ class ModernShell extends StatelessWidget {
       final screenWidth = frameWidth - _frameBezel * 2;
       final screenHeight = frameHeight - _frameBezel * 2;
 
+      // Re-point ScreenUtil at this frame's own design box BEFORE building
+      // anything below that reads `.w/.h/.sp` — otherwise the launcher
+      // would construct itself against whichever era last configured the
+      // (global) ScreenUtil singleton, and overflow until a manual resize
+      // forced a correcting rebuild.
       ScreenUtil.configure(
         designSize: const Size(375, 812),
         data: mediaQuery.copyWith(size: Size(screenWidth, screenHeight)),
       );
 
+      final launcher = _buildLauncher();
       final showPanel = mediaQuery.size.width >= _panelBreakpoint;
 
       return Stack(
@@ -93,7 +110,6 @@ class ModernShell extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Center(
-
               child: SizedBox(
                 height: frameHeight,
                 child: Row(
@@ -120,6 +136,8 @@ class ModernShell extends StatelessWidget {
     }
 
     ScreenUtil.configure(designSize: const Size(300, 784), data: mediaQuery);
+
+    final launcher = _buildLauncher();
 
     return Stack(
       fit: StackFit.expand,

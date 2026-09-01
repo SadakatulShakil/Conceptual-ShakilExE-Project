@@ -5,7 +5,7 @@ enum AppEra {
 
   /// Label shown in the status-bar time control.
   String get yearLabel => switch (this) {
-        AppEra.retro => "'03",
+        AppEra.retro => "'2003",
         AppEra.modern => '2026',
       };
 

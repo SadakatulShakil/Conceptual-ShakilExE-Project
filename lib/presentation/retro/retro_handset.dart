@@ -56,11 +56,14 @@ class RetroHandset extends StatelessWidget {
                 .copyWith(letterSpacing: 3),
           ),
           SizedBox(height: 14.h),
-          const RetroScreen(),
+          // Not const: see the note on `handset` in RetroShell — a
+          // canonical const instance would freeze this at whatever scale
+          // was active on its first-ever build.
+          RetroScreen(),
           SizedBox(height: 20.h),
-          const RetroNavCluster(),
+          RetroNavCluster(),
           SizedBox(height: 20.h),
-          const RetroKeypad(),
+          RetroKeypad(),
         ],
       ),
     );

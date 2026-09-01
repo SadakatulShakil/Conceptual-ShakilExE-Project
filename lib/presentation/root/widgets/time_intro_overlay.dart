@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_theme.dart';
-import '../../shared/full_viewport_scale.dart';
 
 /// Full-screen first-visit intro: a purple rift forms, a year readout
 /// scrambles down to "2003", the "SHAKIL.EXE" wordmark fades in beneath,
@@ -105,8 +103,6 @@ class _TimeIntroOverlayState extends State<TimeIntroOverlay>
 
   @override
   Widget build(BuildContext context) {
-    configureFullViewportScale(context);
-
     return Positioned.fill(
       child: GestureDetector(
         onTap: _skip,
@@ -123,8 +119,8 @@ class _TimeIntroOverlayState extends State<TimeIntroOverlay>
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       SizedBox(
-                        width: 160.w,
-                        height: 160.w,
+                        width: 160,
+                        height: 160,
                         child: Stack(
                           alignment: Alignment.center,
                           children: [
@@ -133,8 +129,8 @@ class _TimeIntroOverlayState extends State<TimeIntroOverlay>
                               child: Transform.scale(
                                 scale: _riftScale.value,
                                 child: Container(
-                                  width: 140.w,
-                                  height: 140.w,
+                                  width: 140,
+                                  height: 140,
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
                                     gradient: RadialGradient(
@@ -154,7 +150,7 @@ class _TimeIntroOverlayState extends State<TimeIntroOverlay>
                               child: Text(
                                 _scrambledYear(_yearReveal.value),
                                 style: AppTheme.mono(
-                                  size: 36.sp,
+                                  size: 36,
                                   weight: FontWeight.bold,
                                   color: AppColors.timeWarpSoft,
                                 ),
@@ -163,13 +159,13 @@ class _TimeIntroOverlayState extends State<TimeIntroOverlay>
                           ],
                         ),
                       ),
-                      SizedBox(height: 20.h),
+                      const SizedBox(height: 20),
                       Opacity(
                         opacity: _wordmarkOpacity.value,
                         child: Text(
                           'SHAKIL.EXE',
                           style: AppTheme.mono(
-                            size: 13.sp,
+                            size: 13,
                             color: AppColors.textSecondary,
                           ).copyWith(letterSpacing: 6),
                         ),

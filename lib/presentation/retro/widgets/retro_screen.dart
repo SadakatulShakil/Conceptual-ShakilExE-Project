@@ -26,9 +26,10 @@ class RetroScreen extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const RetroStatusBar(),
+          // Not const: see the note on `handset` in RetroShell.
+          RetroStatusBar(),
           SizedBox(height: 10.h),
-          const RetroMenuGrid(),
+          RetroMenuGrid(),
           SizedBox(height: 8.h),
           Obx(
             () => Text(

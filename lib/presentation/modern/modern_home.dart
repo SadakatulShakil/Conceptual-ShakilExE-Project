@@ -37,9 +37,14 @@ class ModernHome extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 16.w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
+        // None of ModernStatusBar/IdentityCard are const here: a canonical
+        // const instance would be the exact same object every time this
+        // rebuilds, and Flutter skips calling build() again on an
+        // unchanged widget — freezing its `.w/.h/.sp` at whatever scale
+        // was active the first time it was ever built.
         children: [
           SizedBox(height: bandGap),
-          const ModernStatusBar(),
+          ModernStatusBar(),
           SizedBox(height: bandGap),
           _BandA(controller: controller),
           SizedBox(height: bandGap),
@@ -47,7 +52,7 @@ class ModernHome extends StatelessWidget {
           SizedBox(height: bandGap),
           _BandC(controller: controller),
           SizedBox(height: bandGap),
-          const IdentityCard(),
+          IdentityCard(),
         ],
       ),
     );
@@ -76,7 +81,8 @@ class _BandA extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Expanded(flex: 3, child: NowBuildingWidget()),
+            // Not const — see the note on ModernStatusBar/IdentityCard above.
+            Expanded(flex: 3, child: NowBuildingWidget()),
             SizedBox(width: 10.w),
             Expanded(
               flex: 2,
@@ -224,7 +230,8 @@ class _BandC extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const Expanded(flex: 3, child: CommitHeatmapWidget()),
+          // Not const — see the note on ModernStatusBar/IdentityCard above.
+          Expanded(flex: 3, child: CommitHeatmapWidget()),
           SizedBox(width: 11.w),
           Expanded(
             flex: 2,
